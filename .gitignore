@@ -1,0 +1,9 @@
+# Cache Files
+modules/Crypto/__pycache__
+modules/Portfolio/__pycache__
+
+# Virtual Environment
+venv
+
+# IDE generated
+.vscode
