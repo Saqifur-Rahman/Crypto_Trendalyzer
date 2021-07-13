@@ -1,0 +1,118 @@
+{% extends 'base.html' %}
+{% block title %} Crypto {% endblock %}
+{% block content %}
+
+<div class="my-3 mx-5">
+    <div class="row">
+        <div class="col-sm-7">
+          <div class="card">
+            <div class="card-body">
+              <h1 class="card-title text-center">
+                  <img src="{{ coin[0]['image'] }}" class="mx-0 mb-1" id="coin_logo" style="height: 45px;">
+                  {{ coin[0]['name'] }}
+              </h1>
+              <div class="mb-2 text-center">
+                <h3 class="font-weight-normal">
+                    <span class="badge badge-pill badge-light">{{ coin[0]['symbol'] }}</span> | 
+                    {% if coin[0]['price_change_percentage_24h']>0 %}
+                        <span class="badge badge-success"> +{{ coin[0]['price_change_percentage_24h'] }} </span>
+                    {% else %}
+                        <span class="badge badge-danger"> {{ coin[0]['price_change_percentage_24h'] }} </span>
+                    {% endif %}
+                    <a type="submit" class="btn btn-dark btn-sm" href="/crypto/coin?id={{ coin[0]['id'] }}">
+                        <img src="https://img.icons8.com/android/22/ffffff/refresh.png"/>
+                    </a>
+                </h3>
+              </div>
+              <div class="mb-4 text-center">
+                <span class="badge badge-primary">Current Price</span> <b>${{ coin[0]['current_price'] }}</b> <t> | 
+                <span class="badge badge-warning">24H High</span> <b>${{ coin[0]['high_24h'] }}</b> <t> | 
+                <span class="badge badge-info">24H Low</span> <b>${{ coin[0]['low_24h'] }}</b> <t>
+              </div>
+              <canvas id="myChart"  class="ml-auto mr-auto" style="width:100%;max-width:600px"></canvas>
+
+              <div class=" text-center mt-4" role="group" aria-label="Basic example">
+                <button type="button" class="btn btn-secondary" onclick="fetchdata(1)" >1D</button>
+                <button type="button" class="btn btn-secondary" onclick="fetchdata(7)" >1W</button>
+                <button type="button" class="btn btn-secondary" onclick="fetchdata(30)" >1M</button>
+                <button type="button" class="btn btn-secondary" onclick="fetchdata(365)" >1Y</button>
+                <button type="button" class="btn btn-secondary" onclick="fetchdata('max')" >ALL</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-5">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">Portfolio Components</h5>
+              <p class="card-text">Transactions</p>
+              <a href="#" class="btn btn-primary">Go somewhere</a>
+            </div>
+          </div>
+        </div>
+      </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+
+    function fetchdata(days) {
+        const url = `https://api.coingecko.com/api/v3/coins/{{ coin[0]['id'] }}/market_chart?vs_currency=usd&days=${days}`
+        $.getJSON(url, (data_points)=>{
+            // console.log(data_points.prices)
+
+            var xValues = []
+            var yValues = []
+
+            for(let i in data_points.prices) {
+                xValues.push(data_points.prices[i][0])
+                yValues.push(data_points.prices[i][1])
+            }
+
+            new Chart("myChart", {
+                type: "line",
+                data: {
+                    labels: xValues,
+                    datasets: [{
+                        fill: false,
+                        lineTension: 0,
+                        backgroundColor: "rgba(2,2,255,0.5)",
+                        borderColor: "rgba(2,2,255,0.5)",
+                        data: yValues,
+                        pointRadius: 1,
+                        label: '{{ coin }}',
+                        indexAxis: ''
+                    }]
+                },
+                options: {
+                    legend: {
+                        display: false
+                    },
+                    scales: {
+                        xAxes: [{
+                            ticks: {
+                                display: false
+                            },
+                            gridLines: {
+                                display: false
+                            }
+                        }],
+                        yAxes: [{
+                            gridLines: {
+                                display: true
+                            }
+                        }]
+                    }
+                }
+            });
+
+        })  
+    }
+
+    $(document).ready(function() {
+        fetchdata(1)
+    })
+</script>
+
+{% endblock %}
