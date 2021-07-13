@@ -41,7 +41,7 @@ python main.py
   2. [Chart.js](https://www.chartjs.org/) - For producing charts
   3. [News API](https://newsapi.org/) - News related to cryptocurrencies
 
-## Featues
-- Coins: List of coins with live prices, percentage change, market cap etc. with search and sort features.
-- Coin Chart: Clicking on coin redirects to the coin page, where charts showing the performance of coin in intervals of a day, week, month, year, alltime are available.
-- News & Events: Latest and Trending news, events related to cryptocurrencies.
+## Key Featues
+- **Coins**: List of coins with live prices, percentage change, market cap etc. with search and sort features.
+- **Coin Chart**: Clicking on coin redirects to the coin page, where charts showing the performance of coin in intervals of a day, week, month, year, alltime are available.
+- **News & Events**: Latest and Trending news, events related to cryptocurrencies.
