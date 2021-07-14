@@ -16,7 +16,7 @@ def home():
     URL = "https://api.coingecko.com/api/v3/events"
     events = requests.get(url = URL).json()
 
-    API_KEY = "YOUR_NEWS_API_KEY"
+    API_KEY = "91c617ecda954f8e9c10dbd16dab03f0"
     URL2 = f"https://newsapi.org/v2/everything?q=bitcoin&apiKey={API_KEY}&pageSize=9"
     news = requests.get(url = URL2).json()
     
