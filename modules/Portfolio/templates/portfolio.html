@@ -2,4 +2,7 @@
 {% block title %} My Portfolio {% endblock %}
 {% block content %}
     <h1>portfolio page</h1>
+    {% if email %}
+    <h1>{{ email }}</h1>
+    {% endif %}
 {% endblock %}

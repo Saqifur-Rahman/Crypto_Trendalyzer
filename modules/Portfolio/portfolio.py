@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template
+from flask import Blueprint, render_template, redirect, session, flash
 
 portfolio = Blueprint(
     "portfolio",
@@ -8,4 +8,8 @@ portfolio = Blueprint(
 
 @portfolio.route("/")
 def my_portfolio():
-    return render_template("portfolio.html")
+    if "email" in session:
+        email = session["email"]
+        return render_template("portfolio.html", email=email)
+    else:
+        return render_template("signin.html", status="401")

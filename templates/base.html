@@ -7,6 +7,12 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" 
     integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
 </head>
+
+<style>
+    body {
+        background-image: radial-gradient(circle, #f7f7f7, #eeeeee, #e5e5e5, #dcdcdc, #d3d3d3);
+    }
+</style>
 <body>
     
     <!--Navbar start-->
@@ -26,9 +32,21 @@
                 <li class="nav-item mr-3">
                     <a class="nav-link" href="/crypto">Coins</a>
                 </li>
-                <li class="nav-item mr-5">
+                <li class="nav-item mr-3">
                     <a class="nav-link" href="/portfolio">My Portfolio</a>
                 </li>
+                {% if session["email"] %}
+                <li class="nav-item mr-5">
+                    <a class="nav-link" href="/logout">Log Out</a>
+                </li>
+                {% else %}
+                <li class="nav-item mr-3">
+                    <a class="nav-link" href="/signin">Sign In</a>
+                </li>
+                <li class="nav-item mr-5">
+                    <a class="btn-sm btn-success nav-link" href="/signup" style="color: white;">Get Started</a>
+                </li>
+                {% endif %}
             </ul>
         </div>
     </nav>
