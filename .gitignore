@@ -1,6 +1,5 @@
 # Cache Files
-modules/Crypto/__pycache__
-modules/Portfolio/__pycache__
+__pycache__
 
 # Virtual Environment
 venv

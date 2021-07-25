@@ -24,10 +24,10 @@ config = {
 }
 try:
     firebase = pyrebase.initialize_app(config)
-    auth  = firebase.auth()
-    print(" * Database Connected")
+    auth = firebase.auth()
+    print(" * Authentication Enabled")
 except:
-    print(" * Failed to connect with Database")
+    print(" * Failed to enable Authentication")
 
 # Blueprints
 app.register_blueprint(crypto, url_prefix="/crypto")
