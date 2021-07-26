@@ -53,6 +53,7 @@ def signup():
         try:
             new_user = auth.create_user_with_email_and_password(email, password)
             session["email"] = email
+            session["portfolio_id"] = email.rsplit("@")[0].replace(".","")
             session.permanent = True
             return redirect("/portfolio")
         except: 
@@ -70,6 +71,7 @@ def signin():
         try:
             user_info = auth.sign_in_with_email_and_password(email, password)
             session["email"] = email
+            session["portfolio_id"] = email.rsplit("@")[0].replace(".","")
             session.permanent = True
             return redirect("/portfolio")
         except:
@@ -82,6 +84,7 @@ def signin():
 @app.route('/logout')
 def logout():
     session.pop("email", None)
+    session.pop("portfolio_id", None)
     return redirect("/signin")
 
 if __name__ == "__main__":

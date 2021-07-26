@@ -43,12 +43,20 @@
             <div class="card-body">
                 <h5 class="card-title text-center">Buy/Sell {{ coin[0]['name'] }} </h5>
                 {% if session['email'] %}
-                
+                {% if message %}
+                <div class="alert alert-danger mx-3 mt-2 text-center" role="alert">
+                    {{ message }}
+                </div>
+                {% endif %}
 
                 <div class="card mx-auto" style="width: 90%; border-radius: 15px;">
                     
                     <div class="card-body mx-auto">
-                        <form name="signupForm" onsubmit="return validateForm()" method="POST">
+                        <form name="buyForm" onsubmit="return validateForm()" method="POST">
+                            <input type = "hidden" name = "mode" value = "BUY" />
+                            <input type = "hidden" name = "email" value = "{{ session['email'] }}" />
+                            <input type = "hidden" name = "price" class="price" />
+                            <input type = "hidden" name = "portfolio_id" value="{{ session['portfolio_id'] }}"/>
                             <center>
                                 <small class="form-text text-muted mt-0">CURRENT BUYING PRICE</small>
                                 <b id="current_price2"></b>
@@ -59,12 +67,14 @@
                                     <div class="col-sm">
                                         <input type="number" class="form-control"  id="buy_usd"  name="usd" placeholder="In USD" 
                                             oninput="usdToCoin(this.value)" onchange="usdToCoin(this.value)"
+                                            step="any"
                                         >
                                     </div>
                                     <p class="mt-1">=</p>
                                     <div class="col-sm">
-                                        <input type="number" class="form-control" id="buy_coin" name="coin" placeholder="In {{ coin[0]['symbol']|upper }}"
+                                        <input type="number" class="form-control" id="buy_coin" name="units" placeholder="In {{ coin[0]['symbol']|upper }}"
                                             oninput="coinToUsd(this.value)" onchange="coinToUsd(this.value)"
+                                            step="any"
                                         >
                                     </div>
                                 </div>
@@ -81,7 +91,11 @@
                   <div class="card mx-auto mt-3" style="width: 90%; border-radius: 15px;">
                     
                     <div class="card-body mx-auto">
-                        <form name="signupForm" onsubmit="return validateForm()" method="POST">
+                        <form name="Form" onsubmit="return validateForm()" method="POST">
+                            <input type = "hidden" name = "mode" value = "SELL" />
+                            <input type = "hidden" name = "email" value = "{{ session['email'] }}" />
+                            <input type = "hidden" name = "price" class="price"/>
+                            <input type = "hidden" name = "portfolio_id" value="{{ session['portfolio_id'] }}"/>
                             <center>
                                 <small class="form-text text-muted mt-0">CURRENT BUYING PRICE</small>
                                 <b id="current_price3"></b>
@@ -92,12 +106,14 @@
                                     <div class="col-sm">
                                         <input type="number" class="form-control" id="sell_usd" name="usd" placeholder="In USD" 
                                             oninput="usdToCoin2(this.value)" onchange="usdToCoin2(this.value)"
+                                            step="any"
                                         >
                                     </div>
                                     <p class="mt-1">=</p>
                                     <div class="col-sm">
-                                        <input type="number" class="form-control" id="sell_coin" name="coin" placeholder="In {{ coin[0]['symbol']|upper }}" 
+                                        <input type="number" class="form-control" id="sell_coin" name="units" placeholder="In {{ coin[0]['symbol']|upper }}" 
                                             oninput="coinToUsd2(this.value)" onchange="coinToUsd2(this.value)"
+                                            step="any"    
                                         >
                                     </div>
                                 </div>
@@ -113,7 +129,7 @@
             
 
 
-                <h5 class="text-center"> <span class="badge badge-dark">Transactions</span> </h5>
+            <small class="form-text text-muted text-center mb-3">View your <a href="/portfolio">Transactions</a></small>
 
                 {% else %}
 
@@ -132,12 +148,30 @@
 <script>
     var current_price = null
 
+    function validateForm() {
+        let form = document.forms["Form"]
+        let usd = form["usd"].value
+        let coin = form["coin"].value
+
+        if(usd <= 0 || coin <=0) {
+            alert("Invalid buy/sell amount!")
+            return false
+        }
+    }
+
+
     function fetchData() {
         const coin_id = "{{ coin_id|safe }}"
         const url = `https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=${coin_id}&per_page=1&page=1&sparkline=false`
         $.getJSON(url, (coin_info)=>{
             // console.log(coin_info[0].current_price)
             current_price = coin_info[0].current_price
+            if(document.getElementsByClassName("price").length>0) {
+                document.getElementsByClassName("price")[0].value = current_price
+                document.getElementsByClassName("price")[1].value = current_price
+            }
+            
+
             document.getElementById("current_price").innerText = "$"+coin_info[0].current_price.toFixed(2)
             if(document.getElementById("current_price2"))
                 document.getElementById("current_price2").innerText = "$"+coin_info[0].current_price.toFixed(2)

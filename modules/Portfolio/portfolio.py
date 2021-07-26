@@ -35,3 +35,25 @@ def my_portfolio():
         return render_template("portfolio.html", email=email)
     else:
         return render_template("signin.html", status="401")
+
+def getCoinValue(portfolio_id, coin):
+    found=False
+    # check if portfolio exists
+    for pf in db.child("portfolios").get():
+        if pf.key() == portfolio_id:
+            found=True
+            break
+    if not found:
+        return 0
+    # if exists 
+    portfolios = db.child("portfolios").child(portfolio_id).get()
+    for pf in portfolios:
+        if pf.key() == coin:
+            return pf.val()
+    return 0
+
+@portfolio.route("/test")
+def test():
+    curr_val = getCoinValue("xyz", "cardano")
+    # db.child("portfolios").child("xyz").update({"bitcoin": 100})
+    return f"<h1>{curr_val}</h1>"
