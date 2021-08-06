@@ -60,7 +60,9 @@ python main.py
 - Authenticate users for making transcations and view portfolio using Firebase Authentication.
 - Signup Route: `./signup`
 - Signin Route: `./signin`
+- Logout: `./logout`
 - Firebase Authentication stores and uses email and hashed password for authenticate users.
+- Session is generated after successful authentication and session is destroyed after logout. Session stores email portfolio_id of the user.
 
 ### Coins
 - List of coins with live prices, percentage change, market cap etc. with search and sort features.
@@ -104,7 +106,7 @@ Parameters:
 ```
 {
   portfolios: [
-      email: [
+      portfolio_id: [
         { "coin_id": units }
       ]
   ]
