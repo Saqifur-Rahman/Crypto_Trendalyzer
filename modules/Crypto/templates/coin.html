@@ -4,6 +4,9 @@
 
 <div class="my-3 mx-5">
     <div class="row">
+
+
+        <!-- Chart Panel -->
         <div class="col-sm-8">
           <div class="card">
             <div class="card-body">
@@ -38,6 +41,8 @@
           </div>
         </div>
 
+
+        <!-- Buy and Sell Panel -->
         <div class="col-sm-4">
           <div class="card">
             <div class="card-body">
@@ -137,10 +142,32 @@
 
                 {% endif %}
             </div>
-          </div>
         </div>
+        
 
-      </div>
+        <!-- Prediction Panel -->
+        <div class="col-sm-4">
+            <div class="card">
+                <div class="card-body">
+                    <h2 class="card-title text-center">Price Prediction For {{ coin[0]['name'] }} </h5>
+                    {% if session['email'] %}
+                    {% if message %}
+                    <div class="alert alert-danger mx-3 mt-2 text-center" role="alert">
+                        {{ message }}
+                    </div>
+                    {% endif %}
+        
+                    <div class="card mx-auto" style="width: 90%; border-radius: 15px;">
+ 
+                    </div>
+        
+        
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        
+    </div>      
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
