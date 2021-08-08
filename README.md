@@ -42,6 +42,90 @@ python main.py
   3. [News API](https://newsapi.org/) - News related to cryptocurrencies
 
 ## Key Featues
-- **Coins**: List of coins with live prices, percentage change, market cap etc. with search and sort features.
-- **Coin Chart**: Clicking on coin redirects to the coin page, where charts showing the performance of coin in intervals of a day, week, month, year, alltime are available.
-- **News & Events**: Latest and Trending news, events related to cryptocurrencies.
+
+### News & Events
+- Latest and Trending news, events related to cryptocurrencies.
+- Route: `./`
+- This section contains two parts:
+  1. **News**: Fetch latest news related to cryptocurrencies using NewsAPI.
+  ```
+  GET : newsapi.org/v2/everything?q=cryptocurrencies&apiKey={API_KEY}
+  ```
+  2. **Events**: Fetch current events related to cryptocurrencies using CoinGecko API.
+  ```
+  GET : api.coingecko.com/api/v3/events
+  ```
+
+### Authentication
+- Authenticate users for making transcations and view portfolio using Firebase Authentication.
+- Signup Route: `./signup`
+- Signin Route: `./signin`
+- Logout: `./logout`
+- Firebase Authentication stores and uses email and hashed password for authenticate users.
+- Session is generated after successful authentication and session is destroyed after logout. Session stores email portfolio_id of the user.
+
+### Coins
+- List of coins with live prices, percentage change, market cap etc. with search and sort features.
+- Route: `./crypto/`
+- Fetch list of coins and all related details using CoinGecko API.
+```
+GET : api.coingecko.com/api/v3/coins/markets
+Parameters: 
+  vs_currency - usd
+  order - market_cap_desc
+  per_page - 200
+```
+- Search and Sort coins implemented using JQuery.
+- List of coins is refreshed every 7.5 seconds using JQuery.
+
+### Coin Page
+- Performance of coin in intervals of a day, week, month, year, alltime, options to buy and sell coins.
+- Route: `./crypto/coin` | Parameters: `id = {coin_id}`
+- This section contains two parts:
+  1. **Coin Performance**: Fetch detials of coin using CoinGecko API and performance graph generated using Chart.js
+  ```
+  GET : api.coingecko.com/api/v3/coins/markets
+  Parameters: 
+    vs_currency - usd
+    ids - {coin_id}
+    order - market_cap_desc
+    per_page - 200
+  ```
+  2. **Buy/Sell Coin**: If authenticted, allows user to buy/sell coin in terms of USD or coin units, making and validating transactions using  Firebase Realtime Database.
+
+### Portfolio
+- Dedicated section for all the transcations, current distribution of coins with profit/loss.
+- Route: `./portfolio/`
+- This section contains two parts:
+  1. **Portfolio Details**: Display portfolio value, margin(profit/loss) made, distribution of coins in the portfolio where coin details fetched using CoinGecko API and portfolio details from Firebase Realtime Database.
+  2. **Transactions**: Display transcations with details fetched from Firebase Realtime Database.
+
+## Database Schema
+
+### Portfolio Collection
+```
+{
+  portfolios: [
+      portfolio_id: [
+        { "coin_id": units }
+      ]
+  ]
+}
+```
+
+### Transactions Collection
+```
+{
+  transactions: [
+      unique_id: {
+        "coin": coin_id,
+        "email": email,
+        "mode": BUY/SELL
+        "price": current_price,
+        "timestamp": timestamp,
+        "units": units,
+        "usd": amount/cost
+      }
+  ]
+}
+```
