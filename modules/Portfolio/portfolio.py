@@ -92,11 +92,3 @@ def getTransactions(email):
         return transactions, total_invested
     else:
         return None, 0
-
-@portfolio.route("/test")
-def test():
-    curr_val, value = getPortfolio("saqifurrahman")
-    # curr_val = getTransactions("saqifurrahman@gmail.com")
-    # curr_val = getCoinDetails("bitcoin")[0]
-    # db.child("portfolios").child("xyz").update({"bitcoin": 100})
-    return f"<h1>{curr_val}-{value}</h1>"
