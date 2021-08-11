@@ -1192,11 +1192,5 @@
     "symbol": "ocean",
     "name": "Ocean Protocol",
     "image": "https://assets.coingecko.com/coins/images/3687/large/ocean-protocol-logo.jpg?1547038686"
-  },
-  {
-    "id": "singularitynet",
-    "symbol": "agix",
-    "name": "SingularityNET",
-    "image": "https://assets.coingecko.com/coins/images/2138/large/singularitynet.png?1548609559"
   }
 ]
