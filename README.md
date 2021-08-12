@@ -11,7 +11,7 @@
 git clone https://github.com/Saqifur-Rahman/Crypto_Trendalyzer.git
 ```
 
-2. Inside the cloned repo, make a virtual environment. (Optional)
+2. Inside the cloned repo, make a virtual environment. (This MUST be done for authentication to function properly)
 ```
 pip install virtualenv
 virtualenv venv
