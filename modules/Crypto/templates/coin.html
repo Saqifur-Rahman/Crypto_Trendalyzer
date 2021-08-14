@@ -158,8 +158,13 @@
                     {% endif %}
         
                     <div class="card mx-auto" style="width: 90%; border-radius: 15px;">
- 
                     </div>
+                                <h1 class="card-title text-center">
+                                    <img src="{{ coin[0]['image'] }}" class="mx-0 mb-1" id="coin_logo" style="height: 45px;">
+                                    {{ coin[0]['name'] }}
+                                </h1>
+                                <a href="/crypto/predict?id={{ coin[0]['id'] }}">Click me</a>
+                    <canvas id="myChart" class="ml-auto mr-auto" style="width:100%;max-width:700px"></canvas>
         
         
                 </div>
@@ -185,6 +190,15 @@
             return false
         }
     }
+
+    // Failed attempt at integrating prediction
+    // $.ajax({
+    //         type: "POST",
+    //         url: "./machine_learning/ml.py",
+    //         data: { param: text }
+    //     }).done(function (o) {
+    //         // do something
+    //     });
 
 
     function fetchData() {
@@ -270,12 +284,20 @@
 
         })  
     }
-
+    
     $(document).ready(function() {
         fetchChart(1)
+        fetchPredictionChart(1)
         setInterval(fetchData, 2000)
+        
     })
-
+    (location.href = "/crypto/predict?id={{ coin[0]['id'] }}").preventDefault()
+    // $.ajax({
+    //         type: "POST",
+    //         url: "./ml.py",
+    //         data: { id: id }
+    //     }).done(function (o) {
+    //     });
     function usdToCoin(valNum) {
         document.getElementById("buy_coin").value = (valNum/current_price).toFixed(8)
     }

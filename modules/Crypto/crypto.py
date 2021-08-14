@@ -7,10 +7,11 @@ from dotenv import load_dotenv
 from flask import Blueprint, render_template, request, redirect
 import requests
 from requests.sessions import session
+import machine_learning.ml as ml
 
 crypto = Blueprint(
     "crypto",
-    __name__, 
+    __name__,
     template_folder="templates"
 )
 
@@ -18,7 +19,7 @@ load_dotenv()
 
 config = {
     "apiKey": os.getenv("FIREBASE_API_KEY"),
-    "databaseURL" : os.getenv("FIREBASE_DATABASE_URL"),
+    "databaseURL": os.getenv("FIREBASE_DATABASE_URL"),
     "authDomain": os.getenv("FIREBASE_AUTH_DOMAIN"),
     "projectId": os.getenv("FIREBASE_PROJECT_ID"),
     "storageBucket": os.getenv("FIREBASE_STORAGE_BUCKET"),
@@ -33,6 +34,7 @@ try:
 except:
     print(" * Failed to connect with Database")
 
+
 def transaction(email, mode, coin, units, usd, price):
     return {
         "email": email,
@@ -44,29 +46,39 @@ def transaction(email, mode, coin, units, usd, price):
         "timestamp": time.time()
     }
 
+
 def getCoinValue(portfolio_id, coin):
-    found=False
+    found = False
     # check if portfolio exists
     for pf in db.child("portfolios").get():
         if pf.key() == portfolio_id:
-            found=True
+            found = True
             break
     if not found:
         return 0
-    # if exists 
+    # if exists
     portfolios = db.child("portfolios").child(portfolio_id).get()
     for pf in portfolios:
         if pf.key() == coin:
             return pf.val()
     return 0
 
+
 @crypto.route("/")
 def coins_list():
     return render_template("coins_list.html")
 
+
+@crypto.route('/predict', methods=['GET', 'POST'])
+def predict():
+    print('running prediction code!')
+    coin = request.args.get('id')
+    ml.predict(coin)
+
+
 @crypto.route("/coin", methods=['GET', 'POST'])
 def coin():
-    message=None
+    message = None
     if request.method == 'POST':
         email = request.form['email']
         mode = request.form['mode']
@@ -78,23 +90,24 @@ def coin():
         data = transaction(email, mode, coin, units, usd, price)
 
         # check if valid transaction
-        valid=False
+        valid = False
         value = getCoinValue(portfolio_id, coin)
-        if mode=='BUY':
-            value = round((value + units),8)
-            valid=True
+        if mode == 'BUY':
+            value = round((value + units), 8)
+            valid = True
 
-        if mode=='SELL' and (value-units)>=0: 
-            value = round((value - units),8)
-            valid=True
+        if mode == 'SELL' and (value-units) >= 0:
+            value = round((value - units), 8)
+            valid = True
 
-        elif mode=='SELL' and (value-units)<0:
+        elif mode == 'SELL' and (value-units) < 0:
             message = "Failed to make a transcation"
-            
+
         if valid:
             try:
                 db.child("transactions").push(data)
-                db.child("portfolios").child(portfolio_id).update({coin: value})
+                db.child("portfolios").child(
+                    portfolio_id).update({coin: value})
                 return redirect("/portfolio")
             except:
                 message = "Failed to make a transcation"
@@ -102,5 +115,6 @@ def coin():
 
     coin_id = request.args.get('id')
     URL = f"https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids={coin_id}&per_page=1&page=1&sparkline=false"
-    r = requests.get(url = URL)
+    r = requests.get(url=URL)
+    # ml.predict(coin_id)
     return render_template("coin.html", coin=r.json(), coin_id=coin_id, message=message)
