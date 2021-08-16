@@ -145,35 +145,38 @@
         </div>
         
 
-        <!-- Prediction Panel -->
-        <div class="col-sm-4">
-            <div class="card">
-                <div class="card-body">
-                    <h2 class="card-title text-center">Price Prediction For {{ coin[0]['name'] }} </h5>
-                    {% if session['email'] %}
-                    {% if message %}
-                    <div class="alert alert-danger mx-3 mt-2 text-center" role="alert">
-                        {{ message }}
-                    </div>
-                    {% endif %}
-        
-                    <div class="card mx-auto" style="width: 90%; border-radius: 15px;">
-                    </div>
-                                <h1 class="card-title text-center">
-                                    <img src="{{ coin[0]['image'] }}" class="mx-0 mb-1" id="coin_logo" style="height: 45px;">
-                                    {{ coin[0]['name'] }}
-                                </h1>
-                                <a href="/crypto/predict?id={{ coin[0]['id'] }}">Run Prediction Algorithm</a>
-                                <image src="/static/images/{{coin[0]['id']}}-3.png" style="height: 350px; width: 750px" ></image>
-                                <image src="/static/images/{{coin[0]['id']}}-5.png" style="height: 350px; width: 750px" ></image>
-                                <image src="/static/images/{{coin[0]['id']}}-7.png" style="height: 350px; width: 750px" ></image>
-
-                </div>
-                {% endif %}
-            </div>
-        </div>
         
     </div>      
+    <!-- Prediction Panel -->
+    <div class="">
+        <div class="card">
+            <div class="card-body">
+                <h2 class="card-title text-center">Price Prediction For {{ coin[0]['name'] }} </h5>
+                {% if session['email'] %}
+                {% if message %}
+                <div class="alert alert-danger mx-3 mt-2 text-center" role="alert">
+                    {{ message }}
+                </div>
+                {% endif %}
+                
+                <h4 class="card-title text-center">
+                    <a href="/crypto/predict?id={{ coin[0]['id'] }}">Run Prediction Algorithm</a>
+                </h4>
+
+                <div class="card mx-auto" style="width: 90%; border-radius: 15px;">
+                </div>
+                            <h1 class="card-title text-center">
+                                <img src="{{ coin[0]['image'] }}" class="mx-0 mb-1" id="coin_logo" style="height: 45px;">
+                                {{ coin[0]['name'] }}
+                            </h1>
+                            <image src="/static/images/{{coin[0]['id']}}-3.png" style="height: 350px; width: 750px" ></image>
+                            <image src="/static/images/{{coin[0]['id']}}-5.png" style="height: 350px; width: 750px" ></image>
+                            <image src="/static/images/{{coin[0]['id']}}-7.png" style="height: 350px; width: 750px" ></image>
+
+            </div>
+            {% endif %}
+        </div>
+    </div>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
