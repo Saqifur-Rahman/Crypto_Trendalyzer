@@ -16,13 +16,19 @@ from random import randrange
 from sklearn.model_selection import cross_validate, GridSearchCV
 from sklearn.svm import SVR
 from sklearn.metrics import mean_absolute_error as MRE
+import time
+from datetime import date
+import math
 
 
-def predict(coin, time=1):
+def predict(coin, predictionTime=1):
+    ts = math.floor(time.time())
+    print(ts)
+    start_date = date.today()
     warnings.filterwarnings('ignore')
     cg = CoinGeckoAPI()
     bitcoin = cg.get_coin_market_chart_range_by_id(
-        id=coin, vs_currency='usd', from_timestamp='1420070400', to_timestamp='1627850685')
+        id=coin, vs_currency='usd', from_timestamp='1420070400', to_timestamp=ts)
     bitcoin_prices = bitcoin.get("prices")
     bitcoin_array_prices = np.array(bitcoin_prices)
 
@@ -89,7 +95,7 @@ def predict(coin, time=1):
 
     prediction_3 = []  # filling list with timedelta values for prediction
     for x in range(forecast_3):
-        prediction_3.append(np.datetime64('2021-08-01') -
+        prediction_3.append(np.datetime64(start_date) -
                             np.datetime64(-(x+1), 'D'))
     # print(prediction_3)
 
@@ -100,82 +106,84 @@ def predict(coin, time=1):
     forecast_dates_3 = []  # filling in list with forecasting dates in a regular format
     for x in range(forecast_3):
         forecast_dates_3.append(np.datetime64(
-            '2021-08-01') + np.timedelta64(x, 'D'))
+            start_date) + np.timedelta64(x, 'D'))
     # print(forecast_dates_3)
 
     plt.figure(figsize=(12, 6))
     plt.plot(forecast_dates_3, svr_rbf.predict(
-        prediction_3), color='red', label='RBF model')
+        prediction_3), color='red', label=coin)
     plt.xlabel('Date')
     plt.ylabel('Price')
     plt.title("3-day Price Projection")
     plt.legend()
-    plt.savefig(coin+'-'+'3'+'.png')
-    plt.show()
+    plt.savefig('./static/images/'+coin+'-'+'3'+'.png')
+    # plt.show()
 
     ##############################################################################
     ##############################################################################
     ##############################################################################
     # 5 Day Forecast Code
 
-    # forecast_5 = 5  # number of days ahead to forecast
+    forecast_5 = 5  # number of days ahead to forecast
 
-    # prediction_5 = []  # filling list with timedelta values for prediction
-    # for x in range(forecast_5):
-    #     prediction_5.append(np.datetime64('2021-08-01') -
-    #                         np.datetime64(-(x+1), 'D'))
-    # # print(prediction_5)
+    prediction_5 = []  # filling list with timedelta values for prediction
+    for x in range(forecast_5):
+        prediction_5.append(np.datetime64(start_date) -
+                            np.datetime64(-(x+1), 'D'))
+    # print(prediction_5)
 
-    # prediction_5 = np.reshape(prediction_5, (len(prediction_5), 1))
-    # # feeding in timedelta values to predict future prices
-    # # print(svr_rbf.predict(prediction_5))
+    prediction_5 = np.reshape(prediction_5, (len(prediction_5), 1))
+    # feeding in timedelta values to predict future prices
+    # print(svr_rbf.predict(prediction_5))
 
-    # forecast_dates_5 = []  # filling in list with forecasting dates in a regular format
-    # for x in range(forecast_5):
-    #     forecast_dates_5.append(np.datetime64(
-    #         '2021-08-01') + np.timedelta64(x, 'D'))
-    # print(forecast_dates_5)
+    forecast_dates_5 = []  # filling in list with forecasting dates in a regular format
+    for x in range(forecast_5):
+        forecast_dates_5.append(np.datetime64(
+            start_date) + np.timedelta64(x, 'D'))
+    print(forecast_dates_5)
 
-    # plt.figure(figsize=(12, 6))
-    # plt.plot(forecast_dates_5, svr_rbf.predict(
-    #     prediction_5), color='red', label='RBF model')
-    # plt.xlabel('Date')
-    # plt.ylabel('Price')
-    # plt.title("5-day Price Projection")
-    # plt.legend()
-    # # plt.show()
+    plt.figure(figsize=(12, 6))
+    plt.plot(forecast_dates_5, svr_rbf.predict(
+        prediction_5), color='red', label=coin)
+    plt.xlabel('Date')
+    plt.ylabel('Price')
+    plt.title("5-day Price Projection")
+    plt.legend()
+    plt.savefig('./static/images/'+coin+'-'+'5'+'.png')
+    # plt.show()
 
     ##############################################################################
     ##############################################################################
     ##############################################################################
     # 7 Day Forecast Code
 
-    # forecast_7 = 7
-    # prediction_7 = []  # filling list with timedelta values for prediction
-    # for x in range(forecast_7):
-    #     prediction_7.append(np.datetime64('2021-08-01') -
-    #                         np.datetime64(-(x+1), 'D'))
-    # # print(prediction_7)
+    forecast_7 = 7
+    prediction_7 = []  # filling list with timedelta values for prediction
+    for x in range(forecast_7):
+        prediction_7.append(np.datetime64(start_date) -
+                            np.datetime64(-(x+1), 'D'))
+    # print(prediction_7)
 
-    # prediction_7 = np.reshape(prediction_7, (len(prediction_7), 1))
-    # prediction_7_list = svr_rbf.predict(prediction_7)
-    # # feeding in timedelta values to predict future prices
-    # # print(prediction_7_list)
+    prediction_7 = np.reshape(prediction_7, (len(prediction_7), 1))
+    prediction_7_list = svr_rbf.predict(prediction_7)
+    # feeding in timedelta values to predict future prices
+    # print(prediction_7_list)
 
-    # forecast_dates_7 = []  # filling in list with forecasting dates in a regular format
-    # for x in range(forecast_7):
-    #     forecast_dates_7.append(np.datetime64(
-    #         '2021-08-01') + np.timedelta64(x, 'D'))
-    # # print(forecast_dates_7)
+    forecast_dates_7 = []  # filling in list with forecasting dates in a regular format
+    for x in range(forecast_7):
+        forecast_dates_7.append(np.datetime64(
+            start_date) + np.timedelta64(x, 'D'))
+    # print(forecast_dates_7)
 
-    # plt.figure(figsize=(12, 6))
-    # plt.plot(forecast_dates_7, svr_rbf.predict(
-    #     prediction_7), color='red', label='RBF model')
-    # plt.xlabel('Date')
-    # plt.ylabel('Price')
-    # plt.title("7-day Price Projection")
-    # plt.legend()
-    # # plt.show()
+    plt.figure(figsize=(12, 6))
+    plt.plot(forecast_dates_7, svr_rbf.predict(
+        prediction_7), color='red', label=coin)
+    plt.xlabel('Date')
+    plt.ylabel('Price')
+    plt.title("7-day Price Projection")
+    plt.legend()
+    plt.savefig('./static/images/'+coin+'-'+'7'+'.png')
+    # plt.show()
 
 
 # predict('ethereum', 1)

@@ -74,6 +74,7 @@ def predict():
     print('running prediction code!')
     coin = request.args.get('id')
     ml.predict(coin)
+    return redirect("/crypto/coin?id="+coin)
 
 
 @crypto.route("/coin", methods=['GET', 'POST'])
