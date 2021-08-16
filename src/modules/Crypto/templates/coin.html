@@ -163,10 +163,11 @@
                                     <img src="{{ coin[0]['image'] }}" class="mx-0 mb-1" id="coin_logo" style="height: 45px;">
                                     {{ coin[0]['name'] }}
                                 </h1>
-                                <a href="/crypto/predict?id={{ coin[0]['id'] }}">Click me</a>
-                    <canvas id="myChart" class="ml-auto mr-auto" style="width:100%;max-width:700px"></canvas>
-        
-        
+                                <a href="/crypto/predict?id={{ coin[0]['id'] }}">Run Prediction Algorithm</a>
+                                <image src="/static/images/{{coin[0]['id']}}-3.png" style="height: 350px; width: 750px" ></image>
+                                <image src="/static/images/{{coin[0]['id']}}-5.png" style="height: 350px; width: 750px" ></image>
+                                <image src="/static/images/{{coin[0]['id']}}-7.png" style="height: 350px; width: 750px" ></image>
+
                 </div>
                 {% endif %}
             </div>
@@ -190,15 +191,6 @@
             return false
         }
     }
-
-    // Failed attempt at integrating prediction
-    // $.ajax({
-    //         type: "POST",
-    //         url: "./machine_learning/ml.py",
-    //         data: { param: text }
-    //     }).done(function (o) {
-    //         // do something
-    //     });
 
 
     function fetchData() {
@@ -284,20 +276,65 @@
 
         })  
     }
-    
+    function fetchPredictionChart(days) {
+            const url = `https://api.coingecko.com/api/v3/coins/{{ coin[0]['id'] }}/market_chart?vs_currency=usd&days=${days}`
+            $.getJSON(url, (data_points) => {
+                // console.log(data_points.prices)
+
+                var xValues = []
+                var yValues = []
+
+                for (let i in data_points.prices) {
+                    xValues.push(data_points.prices[i][0])
+                    yValues.push(data_points.prices[i][1])
+                }
+
+                new Chart("myChart", {
+                    type: "line",
+                    data: {
+                        labels: xValues,
+                        datasets: [{
+                            fill: false,
+                            lineTension: 0,
+                            backgroundColor: "rgba(2,2,255,0.5)",
+                            borderColor: "rgba(2,2,255,0.5)",
+                            data: yValues,
+                            pointRadius: 1,
+                            label: '{{ coin }}',
+                            indexAxis: ''
+                        }]
+                    },
+                    options: {
+                        legend: {
+                            display: false
+                        },
+                        scales: {
+                            xAxes: [{
+                                ticks: {
+                                    display: false
+                                },
+                                gridLines: {
+                                    display: false
+                                }
+                            }],
+                            yAxes: [{
+                                gridLines: {
+                                    display: true
+                                }
+                            }]
+                        }
+                    }
+                });
+
+            })
+        }
+
     $(document).ready(function() {
         fetchChart(1)
         fetchPredictionChart(1)
         setInterval(fetchData, 2000)
-        
     })
-    (location.href = "/crypto/predict?id={{ coin[0]['id'] }}").preventDefault()
-    // $.ajax({
-    //         type: "POST",
-    //         url: "./ml.py",
-    //         data: { id: id }
-    //     }).done(function (o) {
-    //     });
+
     function usdToCoin(valNum) {
         document.getElementById("buy_coin").value = (valNum/current_price).toFixed(8)
     }
